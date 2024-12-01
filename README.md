@@ -37,13 +37,12 @@ O jogo probabilidado em Pygame ainda não está finalizado e precisa muitos ajus
 
 - Lógica de vitória
 - Jogabilidade
-- Retorno via terminal
+- Retorno visual
 
-Para apostar em par ordenado, clique na casa correspondente ao que quer apostar (casa colorida), atualmente o jogo está pegando as coordenadas como (coluna, linha).
+### Como apostar
 
-O que está faltando:
+**Para apostar, apenas digite a quantidade de fichas e aperte enter!**
+Para apostar em par ordenado, clique na coordenada exata (linha, coluna) correspondente ao que quer apostar (casa colorida) e clique em enter, atualmente o jogo está pegando as coordenadas como (linha, coluna).
+Para apostar em cor ou quadrante, clique no botão correspondente no lado direito.
 
-- Retorno visual para o jogador
-- Troca de jogador1 para jogador2
-
-**Espero que goste da idéia do jogo**.
+**Espero que goste do jogo Probabilidado**.
