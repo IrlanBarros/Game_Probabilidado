@@ -45,4 +45,4 @@ O jogo probabilidado em Pygame ainda não está finalizado e precisa muitos ajus
 Para apostar em par ordenado, clique na coordenada exata (linha, coluna) correspondente ao que quer apostar (casa colorida) e clique em enter, atualmente o jogo está pegando as coordenadas como (linha, coluna).
 Para apostar em cor ou quadrante, clique no botão correspondente no lado direito.
 
-**Espero que goste do jogo Probabilidado**.
+**Espero que goste do jogo Probabilidado.**
