@@ -46,17 +46,11 @@ class Jogador:
 
     def fazer_aposta(self, tipo, valor):
         global mensagem_jogo
-        if self.fichas >= valor:
-            self.fichas -= valor
-            self.apostas[tipo] += valor
-            self.num_rodadas += 1
-            print(f"{self.nome} fez uma aposta de {valor} em {
-                tipo}. Fichas restantes: {self.fichas}")
-            mensagem_jogo = f"{self.nome} apostou {valor} fichas em {
-                tipo}."
-        else:
-            print(f"{self.nome} não tem fichas suficientes para apostar {valor}.")
-            mensagem_jogo = f"{self.nome} não tem fichas suficientes para apostar {valor}."
+        self.fichas -= valor
+        self.apostas[tipo] += valor
+        self.num_rodadas += 1
+        mensagem_jogo = f"{self.nome} apostou {valor} fichas em {
+            tipo}."           
 
     def reset_apostas(self):
         self.apostas = {'quadrante': 0, 'vermelho': 0,
@@ -211,7 +205,7 @@ jogadores = [Jogador("Jogador 1"), Jogador("Jogador 2")]
 jogador_atual = 0
 rodada_atual = 1
 mensagem_jogo = "Seja bem vindo ao Probabilidado!"
-acabou = False
+empate = False
 
 def lancar_dados():
     dado1 = random.randint(1, 6)
@@ -264,67 +258,79 @@ def processar_aposta(dado1, dado2, aposta):
 
 def aposta_quadrante(linha, dado1, dado2, jogador, aposta):
     global mensagem_jogo
-    jogadores[jogador_atual].fazer_aposta('quadrante', aposta)
-    number_line = linha
-    v_dado1, v_dado2 = dado1, dado2
-    if number_line == 0:
-        if v_dado1 > 0 and v_dado1 < 4 and v_dado2 > 3 and v_dado2 < 7:
-            jogadores[jogador_atual].ganhar_fichas(aposta * 3, aposta)
-            print("Venceu, aposta no quadrante 1!!")
-            mensagem_jogo = "Acertou, aposta no quadrante 1!!"
-    elif number_line == 1:
-        if v_dado1 > 0 and v_dado1 < 4 and v_dado2 > 0 and v_dado2 < 4:
-            jogadores[jogador_atual].ganhar_fichas(aposta * 3, aposta)
-            print("Acertou, aposta no quadrante 2!!")
-            mensagem_jogo = "Acertou, aposta no quadrante 2!!"
-    elif number_line == 2:
-        if v_dado1 > 3 and v_dado1 < 7 and v_dado2 > 0 and v_dado2 < 4:
-            jogadores[jogador_atual].ganhar_fichas(aposta * 3, aposta)
-            print("Acertou, aposta no quadrante 3!!")
-            mensagem_jogo = "Acertou, aposta no quadrante 3!!"
-    elif number_line == 3:
-        if v_dado1 > 3 and v_dado1 < 7 and v_dado2 > 3 and v_dado2 < 7:
-            jogadores[jogador_atual].ganhar_fichas(aposta * 3, aposta)
-            print("Acertou, aposta no quadrante 4!!")
-            mensagem_jogo = "Acertou, aposta no quadrante 4!!"
+    if jogadores[jogador_atual].fichas >= aposta:
+        jogadores[jogador_atual].fazer_aposta('quadrante', aposta)
+        number_line = linha
+        v_dado1, v_dado2 = dado1, dado2
+        if number_line == 0:
+            if v_dado1 > 0 and v_dado1 < 4 and v_dado2 > 3 and v_dado2 < 7:
+                jogadores[jogador_atual].ganhar_fichas(aposta * 3, aposta)
+                print("Venceu, aposta no quadrante 1!!")
+                mensagem_jogo = "Acertou, aposta no quadrante 1!!"
+        elif number_line == 1:
+            if v_dado1 > 0 and v_dado1 < 4 and v_dado2 > 0 and v_dado2 < 4:
+                jogadores[jogador_atual].ganhar_fichas(aposta * 3, aposta)
+                print("Acertou, aposta no quadrante 2!!")
+                mensagem_jogo = "Acertou, aposta no quadrante 2!!"
+        elif number_line == 2:
+            if v_dado1 > 3 and v_dado1 < 7 and v_dado2 > 0 and v_dado2 < 4:
+                jogadores[jogador_atual].ganhar_fichas(aposta * 3, aposta)
+                print("Acertou, aposta no quadrante 3!!")
+                mensagem_jogo = "Acertou, aposta no quadrante 3!!"
+        elif number_line == 3:
+            if v_dado1 > 3 and v_dado1 < 7 and v_dado2 > 3 and v_dado2 < 7:
+                jogadores[jogador_atual].ganhar_fichas(aposta * 3, aposta)
+                print("Acertou, aposta no quadrante 4!!")
+                mensagem_jogo = "Acertou, aposta no quadrante 4!!"
+    else:
+        mensagem_jogo = f"{jogadores[jogador_atual].nome} não tem fichas suficientes para apostar {aposta}."
 
 def aposta_cor(casa, dado1, dado2, jogador, cor, aposta):
     global mensagem_jogo
-    jogadores[jogador_atual].fazer_aposta(cor, aposta)
-    casa_tabuleiro = casa
-    v_dado1, v_dado2 = dado1, dado2
-    if casa_tabuleiro == 5:
-        casa_dado = cenario.tabuleiro[v_dado1][v_dado2]
-        if casa_dado == 3:
-            jogadores[jogador_atual].ganhar_fichas(aposta, aposta)
-            print("Acertou com aposta na cor azul!")
-            mensagem_jogo = "Acertou com aposta na cor azul!"
-    elif casa_tabuleiro == 6:
-        casa_dado = cenario.tabuleiro[v_dado1][v_dado2]
-        if casa_dado == 1:
-            jogadores[jogador_atual].ganhar_fichas(aposta * 2, aposta)
-            print("Acertou com aposta na cor vermelha!")
-            mensagem_jogo = "Acertou com aposta na cor vermelha!"
-    elif casa_tabuleiro == 7:
-        casa_dado = cenario.tabuleiro[v_dado1][v_dado2]
-        if casa_dado == 2:
-            jogadores[jogador_atual].ganhar_fichas(aposta * 4, aposta)
-            print("Acertou com aposta na cor verde!")
-            mensagem_jogo = "Acertou com aposta na cor verde!"
+    if jogadores[jogador_atual].fichas >= aposta:
+        jogadores[jogador_atual].fazer_aposta(cor, aposta)
+        casa_tabuleiro = casa
+        v_dado1, v_dado2 = dado1, dado2
+        if casa_tabuleiro == 5:
+            casa_dado = cenario.tabuleiro[v_dado1][v_dado2]
+            if casa_dado == 3:
+                jogadores[jogador_atual].ganhar_fichas(aposta, aposta)
+                print("Acertou com aposta na cor azul!")
+                mensagem_jogo = "Acertou com aposta na cor azul!"
+        elif casa_tabuleiro == 6:
+            casa_dado = cenario.tabuleiro[v_dado1][v_dado2]
+            if casa_dado == 1:
+                jogadores[jogador_atual].ganhar_fichas(aposta * 2, aposta)
+                print("Acertou com aposta na cor vermelha!")
+                mensagem_jogo = "Acertou com aposta na cor vermelha!"
+        elif casa_tabuleiro == 7:
+            casa_dado = cenario.tabuleiro[v_dado1][v_dado2]
+            if casa_dado == 2:
+                jogadores[jogador_atual].ganhar_fichas(aposta * 4, aposta)
+                print("Acertou com aposta na cor verde!")
+                mensagem_jogo = "Acertou com aposta na cor verde!"
+    else:
+        mensagem_jogo = f"{jogadores[jogador_atual].nome} não tem fichas suficientes para apostar {aposta}."
 
 def aposta_par_ordenado(v_dados, pos_casa, aposta):
     global mensagem_jogo
-    jogadores[jogador_atual].fazer_aposta('par_ordenado', aposta)
-    if v_dados == pos_casa:
-        jogadores[jogador_atual].ganhar_fichas(aposta * 5, aposta)
-        print("Acertou com aposta em par ordenado!")
-        mensagem_jogo = "Acertou com aposta em par ordenado!"
+    if jogadores[jogador_atual].fichas >= aposta:
+        jogadores[jogador_atual].fazer_aposta('par_ordenado', aposta)
+        if v_dados == pos_casa:
+            jogadores[jogador_atual].ganhar_fichas(aposta * 5, aposta)
+            print("Acertou com aposta em par ordenado!")
+            mensagem_jogo = "Acertou com aposta em par ordenado!"
+    else:
+        mensagem_jogo = f"{jogadores[jogador_atual].nome} não tem fichas suficientes para apostar {aposta}."
 
-def exibir_vencedor(vencedor):
+def exibir_vencedor(vencedor, empate):
     while True:
         screen.fill((WHITE))
         font = pygame.font.SysFont(None, 60)
-        texto_vencedor = font.render(f"Parabéns, {vencedor.nome}! Você venceu com {vencedor.fichas} fichas!", True, BLACK)
+        if not empate:
+            texto_vencedor = font.render(f"Parabéns, {vencedor.nome}! Você venceu com {vencedor.fichas} fichas!", True, BLACK)
+        else:
+            texto_vencedor = font.render(f"{jogadores[0].nome} e {jogadores[1].nome} empataram com {jogadores[0].fichas} fichas!", True, BLACK)
         screen.blit(texto_vencedor, (WIDTH // 2 - texto_vencedor.get_width() // 2, HEIGHT // 2 - 50))
 
         font_opcoes = pygame.font.SysFont(None, 40)
@@ -418,7 +424,7 @@ def reiniciar_jogo():
     """
     Função para resetar o estado do jogo para o início.
     """
-    global jogo_comecou, jogadores, jogador_atual, rodada_atual, mensagem_jogo, dado1, dado2, acabou, nomes_jogadores
+    global jogo_comecou, jogadores, jogador_atual, rodada_atual, mensagem_jogo, dado1, dado2, acabou, nomes_jogadores, empate
 
     jogo_comecou = False
     nomes_jogadores = solicitar_nomes()
@@ -427,7 +433,7 @@ def reiniciar_jogo():
     rodada_atual = 1
     mensagem_jogo = "Seja bem vindo ao Probabilidado!"
     dado1, dado2 = lancar_dados()
-    acabou = False
+    empate = False
 
 # Loop principal do jogo
 while True:
@@ -446,10 +452,15 @@ while True:
         # Controle do jogo ativo
         elif jogo_comecou:
             # Verificar término das rodadas
-            if jogadores[0].num_rodadas >= NUM_RODADAS and jogadores[1].num_rodadas >= NUM_RODADAS:
+            if jogadores[0].num_rodadas >= NUM_RODADAS and jogadores[1].num_rodadas >= NUM_RODADAS or jogadores[jogador_atual].fichas == 0:
                 vencedor = max(jogadores, key=lambda jogador: jogador.fichas)
-                if not exibir_vencedor(vencedor):  # Opção de reinício ou saída
-                    break
+                if jogadores[0].fichas == jogadores[1].fichas:
+                    empate = True
+                    if not exibir_vencedor(vencedor, empate):  # Opção de reinício ou saída
+                        break
+                else:
+                    if not exibir_vencedor(vencedor, empate):  # Opção de reinício ou saída
+                        break
 
             # Processar eventos relacionados ao jogo
             if event.type == pygame.MOUSEBUTTONUP and not cenario.input_active:
